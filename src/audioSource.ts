@@ -1,4 +1,5 @@
 import { createSignal } from "solid-js";
+import { arc } from "d3";
 
 const [rawData, setRawData] = createSignal<number[]>([]);
 
