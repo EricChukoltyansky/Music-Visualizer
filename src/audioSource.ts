@@ -1,3 +1,7 @@
+import { createSignal } from "solid-js";
+
+const [rawData, setRawData] = createSignal<number[]>([]);
+
 export const startFromFile = async () => {
   const res = await fetch("/wonder.mp3");
   const byteArray = await res.arrayBuffer();
@@ -17,6 +21,13 @@ export const startFromFile = async () => {
 
   const bufferLength = analyzer.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
-  analyzer.getByteFrequencyData(dataArray);
-  console.log(Array.from(dataArray));
+
+  const update = () => {
+    analyzer.getByteTimeDomainData(dataArray);
+    setRawData(Array.from(dataArray));
+    requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
 };
+
+export { rawData };
