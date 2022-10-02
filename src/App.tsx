@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
+import { startFromFile } from "./audioSource";
 
-import logo from "./logo.svg";
-import styles from "./App.module.css";
+startFromFile();
 
 const App: Component = () => {
   return <div></div>;
