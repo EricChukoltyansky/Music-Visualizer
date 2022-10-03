@@ -1,16 +1,34 @@
-import type { Component } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 import { startFromFile, rawData } from "./audioSource";
 import { arc } from "d3";
 
 const arcBuilder = arc();
 
 const RadialGraph: Component = () => {
-  const path = arcBuilder({
-    innerRadius: 10,
-    outerRadius: 90,
-    startAngle: 0,
-    endAngle: Math.PI,
+  const paths = createMemo(() => {
+    const data = rawData();
+    let currentAngle = 0;
+
+    const paths: {
+      path: string | null;
+      color: string;
+    }[] = [];
+
+    for (const d of data) {
+      const path = arcBuilder({
+        innerRadius: 50 - (d / 255) * 35,
+        outerRadius: 50 + (d / 255) * 35,
+        startAngle: currentAngle,
+        endAngle: currentAngle + Math.PI * 0.1,
+      });
+      paths.push({
+        path,
+        color: "blue",
+      });
+      currentAngle += Math.PI * 0.1;
+    }
   });
+
   return (
     <g>
       <path d={path} fill="black" />
