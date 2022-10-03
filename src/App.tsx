@@ -5,9 +5,15 @@ import { arc } from "d3";
 const arcBuilder = arc();
 
 const RadialGraph: Component = () => {
+  const path = arcBuilder({
+    innerRadius: 10,
+    outerRadius: 90,
+    startAngle: 0,
+    endAngle: Math.PI,
+  });
   return (
     <g>
-      <path d="" fill="black" />
+      <path d={path} fill="black" />
     </g>
   );
 };
