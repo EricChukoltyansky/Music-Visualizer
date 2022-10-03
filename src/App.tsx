@@ -1,4 +1,4 @@
-import { type Component, createMemo } from "solid-js";
+import { type Component, createMemo, For } from "solid-js";
 import { startFromFile, rawData } from "./audioSource";
 import { arc } from "d3";
 
@@ -31,6 +31,7 @@ const RadialGraph: Component = () => {
 
   return (
     <g>
+      <For each={paths()}>{() => <path d={path} fill="black" />}</For>
       <path d={path} fill="black" />
     </g>
   );
