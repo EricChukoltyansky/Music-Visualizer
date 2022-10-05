@@ -1,5 +1,4 @@
 import { createSignal } from "solid-js";
-import { arc } from "d3";
 
 const [rawData, setRawData] = createSignal<number[]>([]);
 
@@ -17,7 +16,7 @@ export const startFromFile = async () => {
   analyzer.fftSize = 2048;
 
   source.connect(analyzer);
-  //   analyzer.connect(context.destination);
+  analyzer.connect(context.destination);
   source.start();
 
   const bufferLength = analyzer.frequencyBinCount;
@@ -25,7 +24,8 @@ export const startFromFile = async () => {
 
   const update = () => {
     analyzer.getByteTimeDomainData(dataArray);
-    setRawData(Array.from(dataArray));
+    const orig = Array.from(dataArray);
+    setRawData([[...orig].reverse(), orig].flat());
     requestAnimationFrame(update);
   };
   requestAnimationFrame(update);

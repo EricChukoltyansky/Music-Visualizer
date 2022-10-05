@@ -1,13 +1,15 @@
 import { type Component, createMemo, For } from "solid-js";
 import { startFromFile, rawData } from "./audioSource";
-import { arc } from "d3";
+import { arc, interpolateSinebow } from "d3";
 
 const arcBuilder = arc();
 
 const RadialGraph: Component = () => {
   const paths = createMemo(() => {
     const data = rawData();
-    
+
+    const total = data.reduce((acc, cur) => acc + cur, 0);
+
     const paths: {
       path: string;
       color: string;
@@ -28,7 +30,7 @@ const RadialGraph: Component = () => {
       })!;
       paths.push({
         path,
-        color: "blue",
+        color: interpolateSinebow(d / 255),
       });
       currentAngle += angle;
     }
