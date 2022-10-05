@@ -10,18 +10,22 @@ const RadialGraph: Component = () => {
 
     const total = data.reduce((acc, cur) => acc + cur, 0);
 
+    const highCount = data.filter((d) => d > 32).length;
+    const intensity = highCount / data.length;
+
     const paths: {
       path: string;
       color: string;
     }[] = [];
 
-    const range = 1.8;
+    const range = 1.0 + intensity * 0.5;
     const rangeInRadians = range * Math.PI;
     const startAngle = -(rangeInRadians / 2);
     const angle = rangeInRadians / data.length;
     let currentAngle = startAngle;
 
     for (const d of data) {
+      const angle = rangeInRadians * (d / total);
       const path = arcBuilder({
         innerRadius: 50 - (d / 255) * 35,
         outerRadius: 50 + (d / 255) * 35,
@@ -39,7 +43,7 @@ const RadialGraph: Component = () => {
   });
 
   return (
-    <g>
+    <g transform={`scale(${intensity})`}>
       <For each={paths()}>{(p) => <path d={p.path} fill={p.color} />}</For>
     </g>
   );
