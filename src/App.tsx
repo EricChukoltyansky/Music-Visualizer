@@ -7,32 +7,38 @@ const arcBuilder = arc();
 const RadialGraph: Component = () => {
   const paths = createMemo(() => {
     const data = rawData();
-    let currentAngle = 0;
-
+    
     const paths: {
-      path: string | null;
+      path: string;
       color: string;
     }[] = [];
+
+    const range = 1.8;
+    const rangeInRadians = range * Math.PI;
+    const startAngle = -(rangeInRadians / 2);
+    const angle = rangeInRadians / data.length;
+    let currentAngle = startAngle;
 
     for (const d of data) {
       const path = arcBuilder({
         innerRadius: 50 - (d / 255) * 35,
         outerRadius: 50 + (d / 255) * 35,
         startAngle: currentAngle,
-        endAngle: currentAngle + Math.PI * 0.1,
-      });
+        endAngle: currentAngle + angle,
+      })!;
       paths.push({
         path,
         color: "blue",
       });
-      currentAngle += Math.PI * 0.1;
+      currentAngle += angle;
     }
+
+    return paths;
   });
 
   return (
     <g>
-      <For each={paths()}>{() => <path d={path} fill="black" />}</For>
-      <path d={path} fill="black" />
+      <For each={paths()}>{(p) => <path d={p.path} fill={p.color} />}</For>
     </g>
   );
 };
